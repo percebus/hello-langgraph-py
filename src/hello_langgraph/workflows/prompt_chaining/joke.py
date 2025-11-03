@@ -1,14 +1,14 @@
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
-from IPython.display import Image, display
 from langchain_core.runnables.graph import Graph
 
+from hello_langgraph.util.render import open_mermaid_image
 from hello_langgraph.workflows.model import llmChatModel
 
 
 # Graph state
-class State(TypedDict):
+class StateTypedDict(TypedDict):
     topic: str
     joke: str
     improved_joke: str
@@ -16,14 +16,14 @@ class State(TypedDict):
 
 
 # Nodes
-def generate_joke(state: State):
+def generate_joke(state: StateTypedDict):
     """First LLM call to generate initial joke"""
 
     msg = llmChatModel.invoke(f"Write a short joke about {state['topic']}")
     return {"joke": msg.content}
 
 
-def check_punchline(state: State):
+def check_punchline(state: StateTypedDict):
     """Gate function to check if the joke has a punchline"""
 
     # Simple check - does the joke contain "?" or "!"
@@ -32,21 +32,21 @@ def check_punchline(state: State):
     return "Fail"
 
 
-def improve_joke(state: State):
+def improve_joke(state: StateTypedDict):
     """Second LLM call to improve the joke"""
 
     msg = llmChatModel.invoke(f"Make this joke funnier by adding wordplay: {state['joke']}")
     return {"improved_joke": msg.content}
 
 
-def polish_joke(state: State):
+def polish_joke(state: StateTypedDict):
     """Third LLM call for final polish"""
     msg = llmChatModel.invoke(f"Add a surprising twist to this joke: {state['improved_joke']}")
     return {"final_joke": msg.content}
 
 
 # Build workflow
-oStateGraph = StateGraph(State)
+oStateGraph = StateGraph(StateTypedDict)
 
 # Add nodes
 oStateGraph.add_node("generate_joke", generate_joke)
@@ -69,9 +69,7 @@ oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
 
 # Show workflow
 oGraph: Graph = oCompiledStateGraph.get_graph()
-png: bytes = oGraph.draw_mermaid_png()
-pngImage = Image(png)
-display(pngImage)
+open_mermaid_image(oGraph)
 
 # Invoke
 state = oCompiledStateGraph.invoke({"topic": "cats"})
