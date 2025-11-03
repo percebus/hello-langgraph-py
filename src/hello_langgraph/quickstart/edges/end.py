@@ -3,10 +3,10 @@
 from typing import Literal
 from langgraph.graph import END
 
-from hello_langgraph.quickstart.states.message import MessagesState
+from hello_langgraph.quickstart.state import MessagesStateTypedDict
 
 
-def should_continue(state: MessagesState) -> Literal["tool_node", END]:
+def should_continue(state: MessagesStateTypedDict) -> Literal["tool_node", END]:
     """Decide if we should continue the loop or stop based upon whether the LLM made a tool call"""
 
     messages = state["messages"]

@@ -2,14 +2,16 @@
 
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
+from langchain_core.runnables.graph import Graph
 
-from hello_langgraph.quickstart.states.message import MessagesState
+from hello_langgraph.quickstart.state import MessagesStateTypedDict
 from hello_langgraph.quickstart.model import llm_call
 from hello_langgraph.quickstart.tool_node import tool_node
 from hello_langgraph.quickstart.edges.end import should_continue
+from hello_langgraph.util.render import open_mermaid_image
 
 # Build workflow
-oStateGraph = StateGraph(MessagesState)
+oStateGraph = StateGraph(MessagesStateTypedDict)
 
 # Add nodes
 oStateGraph.add_node("llm_call", llm_call)
@@ -28,8 +30,8 @@ oStateGraph.add_edge("tool_node", "llm_call")
 oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
 
 # Show the agent
-from IPython.display import Image, display
-display(Image(oCompiledStateGraph.get_graph(xray=True).draw_mermaid_png()))
+oGraph: Graph = oCompiledStateGraph.get_graph(xray=True)
+open_mermaid_image(oGraph)
 
 # Invoke
 from langchain.messages import HumanMessage

@@ -5,6 +5,6 @@ from typing_extensions import TypedDict, Annotated
 import operator
 
 
-class MessagesState(TypedDict):
+class MessagesStateTypedDict(TypedDict):
     messages: Annotated[list[AnyMessage], operator.add]
     llm_calls: int

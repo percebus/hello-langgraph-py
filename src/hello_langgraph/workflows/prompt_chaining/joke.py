@@ -1,18 +1,10 @@
-from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.runnables.graph import Graph
 
 from hello_langgraph.util.render import open_mermaid_image
 from hello_langgraph.workflows.model import llmChatModel
-
-
-# Graph state
-class StateTypedDict(TypedDict):
-    topic: str
-    joke: str
-    improved_joke: str
-    final_joke: str
+from hello_langgraph.workflows.prompt_chaining.state import StateTypedDict
 
 
 # Nodes

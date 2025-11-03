@@ -1,7 +1,4 @@
 from typing import Any
-from typing_extensions import TypedDict
-
-# from IPython.display import Image, display  # Jupyter only
 
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
@@ -9,14 +6,7 @@ from langchain_core.runnables.graph import Graph
 
 from hello_langgraph.util.render import open_mermaid_image
 from hello_langgraph.workflows.model import llmChatModel
-
-# Graph state
-class StateTypedDict(TypedDict):
-    topic: str
-    joke: str
-    story: str
-    poem: str
-    combined_output: str
+from hello_langgraph.workflows.parallelization.state import StateTypedDict
 
 
 # Nodes
