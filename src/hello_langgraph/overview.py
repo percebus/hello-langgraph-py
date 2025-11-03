@@ -1,3 +1,5 @@
+# SRC: https://docs.langchain.com/oss/python/langgraph/overview
+
 from langgraph.graph import StateGraph, MessagesState, START, END
 
 def mock_llm(state: MessagesState):
