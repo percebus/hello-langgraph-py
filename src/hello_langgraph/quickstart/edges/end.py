@@ -1,9 +1,9 @@
 # SRC: https://docs.langchain.com/oss/python/langgraph/quickstart#5-define-end-logic
 
 from typing import Literal
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END
 
-from .state import MessagesState
+from hello_langgraph.quickstart.states.message import MessagesState
 
 
 def should_continue(state: MessagesState) -> Literal["tool_node", END]:

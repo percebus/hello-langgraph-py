@@ -1,38 +1,39 @@
 # SRC: https://docs.langchain.com/oss/python/langgraph/quickstart#6-build-and-compile-the-agent
 
 from langgraph.graph import StateGraph, START, END
+from langgraph.graph.state import CompiledStateGraph
 
-from hello_langgraph.quickstart.state import MessagesState
-from .model_node import llm_call
-from .tool_node import tool_node
-from .end import should_continue
+from hello_langgraph.quickstart.states.message import MessagesState
+from hello_langgraph.quickstart.model import llm_call
+from hello_langgraph.quickstart.tool_node import tool_node
+from hello_langgraph.quickstart.edges.end import should_continue
 
 # Build workflow
-agent_builder = StateGraph(MessagesState)
+oStateGraph = StateGraph(MessagesState)
 
 # Add nodes
-agent_builder.add_node("llm_call", llm_call)
-agent_builder.add_node("tool_node", tool_node)
+oStateGraph.add_node("llm_call", llm_call)
+oStateGraph.add_node("tool_node", tool_node)
 
 # Add edges to connect nodes
-agent_builder.add_edge(START, "llm_call")
-agent_builder.add_conditional_edges(
+oStateGraph.add_edge(START, "llm_call")
+oStateGraph.add_conditional_edges(
     "llm_call",
     should_continue,
     ["tool_node", END]
 )
-agent_builder.add_edge("tool_node", "llm_call")
+oStateGraph.add_edge("tool_node", "llm_call")
 
 # Compile the agent
-agent = agent_builder.compile()
+oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
 
 # Show the agent
 from IPython.display import Image, display
-display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
+display(Image(oCompiledStateGraph.get_graph(xray=True).draw_mermaid_png()))
 
 # Invoke
 from langchain.messages import HumanMessage
 messages = [HumanMessage(content="Add 3 and 4.")]
-messages = agent.invoke({"messages": messages})
+messages = oCompiledStateGraph.invoke({"messages": messages})
 for m in messages["messages"]:
     m.pretty_print()
