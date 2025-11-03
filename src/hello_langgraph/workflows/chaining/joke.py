@@ -4,7 +4,7 @@ from langchain_core.runnables.graph import Graph
 
 from hello_langgraph.util.render import open_mermaid_image
 from hello_langgraph.workflows.model import llmChatModel
-from hello_langgraph.workflows.prompt_chaining.state import StateTypedDict
+from hello_langgraph.workflows.chaining.state import StateTypedDict
 
 
 # Nodes
