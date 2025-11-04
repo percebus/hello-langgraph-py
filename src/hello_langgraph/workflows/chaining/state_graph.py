@@ -1,8 +1,8 @@
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
-from hello_langgraph.workflows.chat_model import llmChatModel
 from hello_langgraph.workflows.chaining.state import StateTypedDict
+from hello_langgraph.workflows.chat_model import llmChatModel
 
 
 # Nodes
@@ -45,11 +45,7 @@ oStateGraph.add_node("polish_joke", polish_joke)
 
 # Add edges to connect nodes
 oStateGraph.add_edge(START, "generate_joke")
-oStateGraph.add_conditional_edges(
-    "generate_joke", check_punchline, {
-        "Fail": "improve_joke",
-        "Pass": END
-    })
+oStateGraph.add_conditional_edges("generate_joke", check_punchline, {"Fail": "improve_joke", "Pass": END})
 
 oStateGraph.add_edge("improve_joke", "polish_joke")
 oStateGraph.add_edge("polish_joke", END)

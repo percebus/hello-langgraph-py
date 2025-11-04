@@ -1,8 +1,11 @@
 import io
+from typing import TYPE_CHECKING
 
-from PIL import Image
-from PIL.ImageFile import ImageFile
 from langchain_core.runnables.graph import Graph
+from PIL import Image
+
+if TYPE_CHECKING:
+    from PIL.ImageFile import ImageFile
 
 
 def open_mermaid_image(graph: Graph) -> None:

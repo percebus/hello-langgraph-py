@@ -16,7 +16,26 @@ dependencies = [
 [project.optional-dependencies]
 cli = [
     "langgraph-cli[inmem]>=0.4.6,<0.5.0",
+    "pyright>=1.1.407",
     "ruff>=0.14.3,<0.15.0",
+]
+
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+defineConstant = { DEBUG = true }
+typeCheckingMode = "strict"
+include = ["src"]
+strict = ["src"]
+# stubPath = "src/stubs" # TODO?
+# ignore = ["src/oldstuff"] # NOTE what is the difference between exclude and ignore?
+exclude = [
+    ".venv",
+    "typings",
+    "**/__pycache__",
+    "**/test*.py",
+    "**/*.as-is.py"
 ]
 
 

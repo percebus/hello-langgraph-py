@@ -1,7 +1,10 @@
-from langchain_core.runnables.graph import Graph
+from typing import TYPE_CHECKING
 
 from hello_langgraph.util.render import open_mermaid_image
 from hello_langgraph.workflows.orchestration.state_graph import compiled_state_graph
+
+if TYPE_CHECKING:
+    from langchain_core.runnables.graph import Graph
 
 
 def run():

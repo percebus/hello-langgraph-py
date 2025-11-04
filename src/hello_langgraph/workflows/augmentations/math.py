@@ -3,9 +3,11 @@ from langchain_core.runnables.base import Runnable
 
 from hello_langgraph.workflows.chat_model import llmChatModel
 
+
 # Define a tool
 def multiply(a: int, b: int) -> int:
     return a * b
+
 
 # Augment the LLM with tools
 toolsRunnable: Runnable = llmChatModel.bind_tools([multiply])

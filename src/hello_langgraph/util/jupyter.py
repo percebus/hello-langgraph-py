@@ -1,5 +1,4 @@
 from IPython.display import Image, display
-
 from langchain_core.runnables.graph import Graph
 
 

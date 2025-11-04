@@ -10,9 +10,7 @@ def llm_call_router(state: RoutingStateTypedDict):
     # Run the augmented LLM with structured output to serve as routing logic
     decision = get_route.invoke(
         [
-            SystemMessage(
-                content="Route the input to story, joke, or poem based on the user's request."
-            ),
+            SystemMessage(content="Route the input to story, joke, or poem based on the user's request."),
             HumanMessage(content=state["input"]),
         ]
     )
