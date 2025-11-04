@@ -1,9 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
-from langchain_core.runnables.graph import Graph
 
-from hello_langgraph.util.render import open_mermaid_image
-from hello_langgraph.workflows.model import llmChatModel
+from hello_langgraph.workflows.chat_model import llmChatModel
 from hello_langgraph.workflows.chaining.state import StateTypedDict
 
 
@@ -57,23 +55,4 @@ oStateGraph.add_edge("improve_joke", "polish_joke")
 oStateGraph.add_edge("polish_joke", END)
 
 # Compile
-oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
-
-# Show workflow
-oGraph: Graph = oCompiledStateGraph.get_graph()
-open_mermaid_image(oGraph)
-
-# Invoke
-state = oCompiledStateGraph.invoke({"topic": "cats"})
-print("Initial joke:")
-print(state["joke"])
-print("\n--- --- ---\n")
-if "improved_joke" in state:
-    print("Improved joke:")
-    print(state["improved_joke"])
-    print("\n--- --- ---\n")
-
-    print("Final joke:")
-    print(state["final_joke"])
-else:
-    print("Joke failed quality gate - no punchline detected!")
+compiled_state_graph: CompiledStateGraph = oStateGraph.compile()

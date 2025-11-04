@@ -1,7 +1,7 @@
 # Schema for structured output
 from langchain_core.runnables.base import Runnable
 
-from hello_langgraph.workflows.model import llmChatModel
+from hello_langgraph.workflows.chat_model import llmChatModel
 
 # Define a tool
 def multiply(a: int, b: int) -> int:

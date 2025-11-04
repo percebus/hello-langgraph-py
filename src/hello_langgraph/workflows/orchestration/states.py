@@ -2,7 +2,7 @@ from typing import Annotated, TypedDict
 import operator
 
 # Graph state
-from hello_langgraph.workflows.orchestration.sections import Section
+from hello_langgraph.workflows.orchestration.models.sections import Section
 
 
 class StateTypedDict(TypedDict):

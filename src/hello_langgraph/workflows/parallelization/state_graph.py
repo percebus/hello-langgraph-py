@@ -1,11 +1,7 @@
-from typing import Any
-
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
-from langchain_core.runnables.graph import Graph
 
-from hello_langgraph.util.render import open_mermaid_image
-from hello_langgraph.workflows.model import llmChatModel
+from hello_langgraph.workflows.chat_model import llmChatModel
 from hello_langgraph.workflows.parallelization.state import StateTypedDict
 
 
@@ -58,13 +54,6 @@ oStateGraph.add_edge("write_a_joke", "aggregator")
 oStateGraph.add_edge("write_a_story", "aggregator")
 oStateGraph.add_edge("write_a_poem", "aggregator")
 oStateGraph.add_edge("aggregator", END)
-oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
 
 
-# Show workflow
-oGraph: Graph = oCompiledStateGraph.get_graph()
-open_mermaid_image(oGraph)
-
-# Invoke
-state: dict[str, Any] | Any = oCompiledStateGraph.invoke({"topic": "cats"})
-print(state["combined_output"])
+compiled_state_graph: CompiledStateGraph = oStateGraph.compile()

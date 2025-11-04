@@ -1,9 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
-from langchain_core.runnables.graph import Graph
 
-from hello_langgraph.util.render import open_mermaid_image
-from hello_langgraph.workflows.model import llmChatModel
+from hello_langgraph.workflows.chat_model import llmChatModel
 from hello_langgraph.workflows.routing.state import RoutingStateTypedDict
 from hello_langgraph.workflows.routing.router import llm_call_router
 
@@ -66,13 +64,4 @@ oStateGraph.add_edge("write_a_joke", END)
 oStateGraph.add_edge("write_a_poem", END)
 
 # Compile workflow
-oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
-
-# Show the workflow
-oGraph: Graph = oCompiledStateGraph.get_graph()
-open_mermaid_image(oGraph)
-
-
-# Invoke
-state = oCompiledStateGraph.invoke({"input": "Write me a joke about cats"})
-print(state["output"])
+compiled_state_graph: CompiledStateGraph = oStateGraph.compile()

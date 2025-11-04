@@ -2,12 +2,10 @@ from langgraph.types import Send
 from langgraph.graph import StateGraph, START, END
 from langchain.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.graph.state import CompiledStateGraph
-from langchain_core.runnables.graph import Graph
 
-from hello_langgraph.util.render import open_mermaid_image
-from hello_langgraph.workflows.model import llmChatModel
-from hello_langgraph.workflows.orchestration.planner import planner
-from hello_langgraph.workflows.orchestration.sections import SectionCollection
+from hello_langgraph.workflows.chat_model import llmChatModel
+from hello_langgraph.workflows.orchestration.structured_output import planner
+from hello_langgraph.workflows.orchestration.models.sections import Section, SectionCollection
 from hello_langgraph.workflows.orchestration.states import StateTypedDict, WorkerStateTypedDict
 
 
@@ -32,14 +30,14 @@ def write_a_report(state: WorkerStateTypedDict):
     """Worker writes a section of the report"""
 
     # Generate section
-    section = state["section"]
+    oSection: Section = state["section"]
     oAIMessage: AIMessage = llmChatModel.invoke(
         [
             SystemMessage(
                 content="Write a report section following the provided name and description. Include no preamble for each section. Use markdown formatting."
             ),
             HumanMessage(
-                content=f"Here is the section name: {section.name} and description: {section.description}"
+                content=f"Here is the section name: {oSection.name} and description: {oSection.description}"
             ),
         ]
     )
@@ -89,17 +87,4 @@ oStateGraph.add_edge("write_a_report", "concatenate")
 oStateGraph.add_edge("concatenate", END)
 
 # Compile the workflow
-oCompiledStateGraph: CompiledStateGraph = oStateGraph.compile()
-
-# Show the workflow
-oGraph: Graph = oCompiledStateGraph.get_graph()
-open_mermaid_image(oGraph)
-
-# Invoke
-state = oCompiledStateGraph.invoke({"topic": "Create a report on LLM scaling laws"})
-
-final_report = state["final_report"]
-
-# from IPython.display import Markdown
-# Markdown(final_report)
-print(final_report)
+compiled_state_graph: CompiledStateGraph = oStateGraph.compile()

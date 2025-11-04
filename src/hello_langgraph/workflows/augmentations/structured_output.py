@@ -2,7 +2,7 @@
 from pydantic import BaseModel, Field
 from langchain_core.runnables.base import Runnable
 
-from hello_langgraph.workflows.model import llmChatModel
+from hello_langgraph.workflows.chat_model import llmChatModel
 
 class SearchQuery(BaseModel):
     search_query: str = Field(None, description="Query that is optimized web search.")
