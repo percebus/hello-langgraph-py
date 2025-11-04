@@ -1,47 +1,51 @@
 from langgraph.types import Send
 from langgraph.graph import StateGraph, START, END
-from langchain.messages import SystemMessage, HumanMessage
+from langchain.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.graph.state import CompiledStateGraph
 from langchain_core.runnables.graph import Graph
 
 from hello_langgraph.util.render import open_mermaid_image
 from hello_langgraph.workflows.model import llmChatModel
-from hello_langgraph.workflows.chaining.state import StateTypedDict
 from hello_langgraph.workflows.orchestration.planner import planner
-from hello_langgraph.workflows.orchestration.states import WorkerStateTypedDict
+from hello_langgraph.workflows.orchestration.sections import SectionCollection
+from hello_langgraph.workflows.orchestration.states import StateTypedDict, WorkerStateTypedDict
 
 
 def generate_plan(state: StateTypedDict):
     """Orchestrator that generates a plan for the report"""
 
     # Generate queries
-    report_sections = planner.invoke(
+    report_sections: SectionCollection = planner.invoke(
         [
             SystemMessage(content="Generate a plan for the report."),
             HumanMessage(content=f"Here is the report topic: {state['topic']}"),
         ]
     )
 
-    return {"sections": report_sections.sections}
+    print("Sections: ")
+    print([section.name for section in report_sections.items])
+
+    return {"sections": report_sections.items}
 
 
 def write_a_report(state: WorkerStateTypedDict):
     """Worker writes a section of the report"""
 
     # Generate section
-    section = llmChatModel.invoke(
+    section = state["section"]
+    oAIMessage: AIMessage = llmChatModel.invoke(
         [
             SystemMessage(
                 content="Write a report section following the provided name and description. Include no preamble for each section. Use markdown formatting."
             ),
             HumanMessage(
-                content=f"Here is the section name: {state['section'].name} and description: {state['section'].description}"
+                content=f"Here is the section name: {section.name} and description: {section.description}"
             ),
         ]
     )
 
     # Write the updated section to completed sections
-    return {"completed_sections": [section.content]}
+    return {"completed_sections": [oAIMessage.content]}
 
 
 def concatenate(state: StateTypedDict):
@@ -61,7 +65,11 @@ def assign_workers(state: StateTypedDict):
     """Assign a worker to each section in the plan"""
 
     # Kick off section writing in parallel via Send() API
-    return [Send("write_a_report", {"section": s}) for s in state["sections"]]
+    # fmt: off
+    return [
+        Send("write_a_report", {"section": s})
+        for s in state["sections"]]
+    # fmt: on
 
 
 # Build workflow
@@ -90,5 +98,8 @@ open_mermaid_image(oGraph)
 # Invoke
 state = oCompiledStateGraph.invoke({"topic": "Create a report on LLM scaling laws"})
 
-from IPython.display import Markdown
-Markdown(state["final_report"])
+final_report = state["final_report"]
+
+# from IPython.display import Markdown
+# Markdown(final_report)
+print(final_report)

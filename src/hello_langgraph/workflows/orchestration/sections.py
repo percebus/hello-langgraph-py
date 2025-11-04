@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import List
 
 
 # Schema for structured output to use in planning
@@ -12,7 +11,7 @@ class Section(BaseModel):
     )
 
 
-class Sections(BaseModel):
-    sections: List[Section] = Field(
+class SectionCollection(BaseModel):
+    items: list[Section] = Field(
         description="Sections of the report.",
     )
