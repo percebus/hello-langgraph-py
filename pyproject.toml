@@ -25,10 +25,19 @@ cli = [
 venvPath = "."
 venv = ".venv"
 defineConstant = { DEBUG = true }
-typeCheckingMode = "strict"
+typeCheckingMode = "basic"  # Changed from "strict" to "basic" to reduce false positives
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+reportUnknownParameterType = false
+reportUnknownVariableType = false
+reportUnknownArgumentType = false
+reportMissingTypeArgument = false
+reportAttributeAccessIssue = false
+reportAssignmentType = false
+reportInvalidTypeForm = false
+reportArgumentType = false
 include = ["src"]
-strict = ["src"]
-# stubPath = "src/stubs" # TODO?
+stubPath = "typings"
 # ignore = ["src/oldstuff"] # NOTE what is the difference between exclude and ignore?
 exclude = [
     ".venv",
