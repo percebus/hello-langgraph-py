@@ -1,5 +1,9 @@
-from hello_langgraph.workflows.structured_output.models.query import SearchQuery
+from typing import TYPE_CHECKING
+
 from hello_langgraph.workflows.structured_output.structured_output import get_search_results
+
+if TYPE_CHECKING:
+    from hello_langgraph.workflows.structured_output.models.query import SearchQuery
 
 
 def run():
